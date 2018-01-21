@@ -6,6 +6,8 @@ float gravity = 7;
 bool jumping = false;
 int jumpFrame = 0;
 
+bool loser = false;
+
 int main()
 {
     sf::RenderWindow window;
@@ -17,7 +19,7 @@ int main()
     camera.setSize(800, 600);
 
     sf::RectangleShape shape;
-    shape.setSize(sf::Vector2f(45, 100));
+    shape.setSize(sf::Vector2f(20, 100));
     shape.setPosition(400 - (shape.getSize().x / 2), 0);
     shape.setFillColor(sf::Color::Blue);
 
@@ -69,24 +71,36 @@ int main()
         camera.move(speed, 0);
         ground.move(speed, 0);
 
-        //if touching ground
+        //ground collisions
         if((shape.getGlobalBounds().top + shape.getGlobalBounds().height) > ground.getGlobalBounds().top)
         {
             shape.setPosition(shape.getPosition().x, ground.getPosition().y - shape.getSize().y);
         }
 
+        //obstacle wrap around
         if(obstacle.getPosition().x + obstacle.getSize().x < camera.getCenter().x - (camera.getSize().x / 2))
         {
             obstacle.move(800 + obstacle.getSize().x, 0);
+        }
+
+        //obstacle player collisions
+        if(shape.getPosition().x > obstacle.getPosition().x &&
+           shape.getPosition().y + shape.getSize().y > obstacle.getPosition().y &&
+           shape.getPosition().x + shape.getSize().x < obstacle.getPosition().x + obstacle.getSize().x)
+        {
+            loser = true;
         }
 
         window.clear();
 
         window.setView(camera);
 
-        window.draw(ground);
-        window.draw(shape);
-        window.draw(obstacle);
+        if(loser != true)
+        {
+            window.draw(ground);
+            window.draw(shape);
+            window.draw(obstacle);
+        }
 
         window.display();
     }
