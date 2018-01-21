@@ -72,7 +72,7 @@ int main()
         //if touching ground
         if((shape.getGlobalBounds().top + shape.getGlobalBounds().height) > ground.getGlobalBounds().top)
         {
-            shape.move(0, -gravity);
+            shape.setPosition(shape.getPosition().x, ground.getPosition().y - shape.getSize().y);
         }
 
         if(obstacle.getPosition().x + obstacle.getSize().x < camera.getCenter().x - (camera.getSize().x / 2))
